@@ -12,5 +12,6 @@ public:
     int getX() const;
     int getY() const;
     void Draw(CDC* dc);
+
 };
 

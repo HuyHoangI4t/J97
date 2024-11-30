@@ -1,43 +1,29 @@
-﻿
-// ChildView.h : interface of the CChildView class
-//
-
-
-#pragma once
+﻿#pragma once
 #include "Maze.h"
 #include "Player.h"
-// CChildView window
+#include "boom.h"
 
 class CChildView : public CWnd
 {
-// Construction
 private:
-	
-public:
-	CChildView();
+    DWORD startTime;      // Thời điểm bắt đầu trò chơi
+    CString timeDisplay;
 
-// Attributes
 public:
-	int size;
-	Maze maze;
-	Player player;
-// Operations
-public:
+    int size;
+    Maze maze;
+    Player player;
+    boom Bom;
 
-// Overrides
-	protected:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+    CChildView();
+    virtual ~CChildView();
 
-// Implementation
-public:
-	virtual ~CChildView();
-
-	// Generated message map functions
 protected:
-	afx_msg void OnPaint();
-	DECLARE_MESSAGE_MAP()
-public:
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-};
+    virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
+    afx_msg void OnPaint();
+    afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+    afx_msg void OnTimer(UINT_PTR nIDEvent);
+
+    DECLARE_MESSAGE_MAP()
+};
