@@ -1,17 +1,18 @@
-#pragma once
+﻿#pragma once
+#include <atlimage.h>
 
-class Player
-{
+class Player {
+private:
+    int x, y;                 // Tọa độ nhân vật
+    CImage playerImage;       // Hình ảnh nhân vật
+
 public:
-	int x, y;
-	int Bom;
-	bool die;
     Player();
+    ~Player();
+
     void setX(int x);
     void setY(int y);
     int getX() const;
     int getY() const;
-    void Draw(CDC* dc);
-
+    void Draw(CDC* dc) const; // Vẽ nhân vật
 };
-

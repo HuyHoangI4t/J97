@@ -1,58 +1,107 @@
 ﻿#include "pch.h"
-#include "boom.h"
+#include "Boom.h"
 
-boom::boom(int x, int y, int range) : x(x), y(y), range(range), isActive(false), activationTime(0), isExploded(false) {}
+Boom::Boom() : x(0), y(0), range(1), isActive(false), isExploded(false), activationTime(0) {
 
-void boom::SetPosition(int x, int y) {
+}
+
+Boom::~Boom() {
+    if (!bombImage.IsNull()) {
+        bombImage.Destroy();
+    }
+    if (!explosionImage.IsNull()) {
+        explosionImage.Destroy();
+    }
+}
+
+void Boom::SetPosition(int x, int y) {
     this->x = x;
     this->y = y;
 }
 
-void boom::SetRange(int range) {
+void Boom::SetRange(int range) {
     this->range = range;
 }
 
-void boom::Activate() {
-    isActive = true;                // Kích hoạt bom
-    isExploded = false;             // Đảm bảo bom chưa nổ
-    activationTime = GetTickCount64(); // Ghi lại thời gian khi bom được đặt
+int Boom::GetX() const {
+    return x;
 }
 
-void boom::Update() {
+int Boom::GetY() const {
+    return y;
+}
+
+int Boom::GetRange() const {
+    return range;
+}
+
+void Boom::Activate() {
+    isActive = true;
+    isExploded = false;
+    activationTime = std::time(nullptr);
+}
+
+void Boom::Update() const {
     if (isActive && !isExploded) {
-        DWORDLONG currentTime = GetTickCount64();
-        // Nếu đã qua 2 giây (2000ms), bom sẽ nổ
-        if (currentTime - activationTime >= 2000) {
-            isExploded = true; // Đánh dấu bom đã nổ
+        if (std::difftime(std::time(nullptr), activationTime) >= 2) {
+           /* isExploded = true;*/
         }
     }
 }
 
-bool boom::IsExploded() const {
+void Boom::Draw(CDC* dc) const {
+    CImage bombImage, explosionImage;
+    HRESULT hr = bombImage.Load(_T("res/bomb.png"));
+    HRESULT hr1 = explosionImage.Load(_T("res/explosion.png"));
+    int size = 50;
+    if (isActive && !isExploded) {
+        CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
+        bombImage.Draw(dc->GetSafeHdc(), bombRect);
+    }
+    else if (isExploded) {
+        for (int dx = -range; dx <= range; ++dx) {
+            for (int dy = -range; dy <= range; ++dy) {
+                CRect explosionRect((x + dx) * size, (y + dy) * size,
+                    (x + dx + 1) * size, (y + dy + 1) * size);
+                /*explosionImage.Draw(dc->GetSafeHdc(), explosionRect);*/
+                dc->Ellipse(explosionRect);
+            }
+        }
+    }
+  
+        //int size = 50;  // Kích thước ô
+
+        //if (isActive && !isExploded) {
+        //    // Vẽ bom dưới dạng elip tại vị trí (x, y)
+        //    CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
+        //    dc->SelectStockObject(DC_PEN);  // Chọn bút vẽ
+        //    dc->SetDCPenColor(RGB(255, 0, 0));  // Đặt màu bom là đỏ (RGB)
+        //    dc->Ellipse(bombRect);  // Vẽ elip tại vị trí của bom
+        //}
+        //else if (isExploded) {
+        //    // Vẽ hiệu ứng nổ dưới dạng elip, sử dụng màu khác cho nổ
+        //    dc->SetDCPenColor(RGB(255, 165, 0));  // Màu cam cho hiệu ứng nổ
+        //    for (int i = -range; i <= range; ++i) {
+        //        for (int j = -range; j <= range; ++j) {
+        //            int newX = x + j;
+        //            int newY = y + i;
+        //            CRect explosionRect(newX * size, newY * size, (newX + 1) * size, (newY + 1) * size);
+        //            dc->Ellipse(explosionRect);  // Vẽ hiệu ứng nổ dưới dạng elip
+        //        }
+        //    }
+        //}
+    
+}
+
+bool Boom::IsExploded() const {
     return isExploded;
 }
 
-bool boom::GetActiveState() const {
+bool Boom::GetActiveState() const {
     return isActive;
 }
 
-void boom::Draw(CDC* dc) const {
-    if (isActive) {
-        CImage bombImage;
-        bombImage.Load(_T("res/bomb.png")); // Đường dẫn đến hình ảnh của bom
-        CRect bombRect(x * 50, y * 50, (x + 1) * 50, (y + 1) * 50);
-        bombImage.Draw(dc->GetSafeHdc(), bombRect);
-    }
-}
-
-int boom::GetX() const {
-    return x;
-}
-
-int boom::GetY() const {
-    return y;
-}
-
-int boom::GetRange() const {
-    return range;
+void Boom::Reset() {
+    isActive = false;
+    isExploded = false;
 }

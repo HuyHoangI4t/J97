@@ -1,21 +1,22 @@
 ﻿#pragma once
-#include "pch.h"
+#include <atlimage.h>
 
 class Maze {
-public:
+private:
     static const int rows = 13;
     static const int cols = 15;
     int maze[rows][cols];
-    int size; // Kích thước mỗi ô
+    int size;  // Kích thước mỗi ô
+    
 
+
+public:
+    int* GetMap();
     Maze();
-    void draw(CDC* dc) const; // Vẽ bản đồ
-    int GetCell(int row, int col) const; // Lấy giá trị của ô tại (row, col)
-    void SetCell(int row, int col, int value); // Thiết lập giá trị cho ô tại (row, col)
-    int GetRows() const; // Lấy số hàng
-    int GetCols() const; // Lấy số cột
-    void AddItem(int x, int y); // Thêm item vào vị trí (x, y)
-    void RemoveItem(int x, int y); // Xóa item tại vị trí (x, y)
-
-    void ExplosionAndItem(int bombX, int bombY, int range); // Xử lý nổ bom và sinh item
+    void draw(CDC* dc) const;
+    int GetCell(int row, int col) const;
+    void SetCell(int row, int col, int value);
+    int GetRows() const { return rows; }
+    int GetCols() const { return cols; }
+    void ExplosionAndItem(int bombX, int bombY, int range);
 };

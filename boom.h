@@ -1,24 +1,31 @@
 ﻿#pragma once
-#include "pch.h"
+#include "Maze.h"
+#include <atlimage.h>
+#include <ctime>
 
-class boom {
+class Boom {
+private:
+    int x, y;                // Tọa độ bom
+    int range;               // Phạm vi nổ
+    bool isActive;           // Trạng thái bom
+    bool isExploded;         // Trạng thái đã nổ
+    std::time_t activationTime; // Thời gian kích hoạt
+    CImage bombImage;        // Hình ảnh bom
+    CImage explosionImage;   // Hình ảnh nổ
+
 public:
-    int x, y;                   // Tọa độ của bom trong ma trận
-    int range;                  // Phạm vi nổ của bom
-    DWORDLONG activationTime;       // Thời gian bom được kích hoạt
-    bool isActive;              // Trạng thái của bom (đã kích hoạt hay chưa)
-    bool isExploded;            // Trạng thái bom đã nổ hay chưa
+    Boom();
+    ~Boom();
 
-    boom(int x = 0, int y = 0, int range = 1);
-
-    void SetPosition(int x, int y);  // Đặt vị trí bom
-    void SetRange(int range);        // Đặt phạm vi nổ
-    void Activate();                 // Kích hoạt bom
-    void Update();                   // Cập nhật trạng thái bom (kiểm tra thời gian nổ)
-    bool IsExploded() const;         // Kiểm tra xem bom đã nổ hay chưa
-    bool GetActiveState() const;     // Trả về trạng thái bom
-    void Draw(CDC* dc) const;        // Vẽ bom trên màn hình
-    int GetX() const;                // Lấy tọa độ X
-    int GetY() const;                // Lấy tọa độ Y
-    int GetRange() const;            // Lấy phạm vi nổ
+    void SetPosition(int x, int y);
+    void SetRange(int range);
+    int GetX() const;
+    int GetY() const;
+    int GetRange() const;
+    void Activate();
+    void Update() const;
+    void Draw(CDC* dc) const;
+    bool IsExploded() const;
+    bool GetActiveState() const;
+    void Reset();
 };

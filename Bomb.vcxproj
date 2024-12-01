@@ -183,9 +183,10 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="boom.h" />
+    <ClInclude Include="Boom.h" />
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="ChildView.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Maze.h" />
@@ -195,9 +196,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="boom.cpp" />
+    <ClCompile Include="Boom.cpp" />
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="ChildView.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="pch.cpp">
