@@ -3,15 +3,14 @@
 #include "Player.h"
 #include "Boom.h"
 #include "Enemy.h"
-#include <vector>
-#include <afxmt.h>
+#include "afxmt.h"
 
 
 class CChildView : public CWnd {
 private:
         // Thời gian bắt đầu trò chơi
     CString timeDisplay;  // Thời gian chơi
-    std::vector<Enemy> enemies; // Danh sách các kẻ địch
+    
     bool gameOver;
 
 public:
@@ -19,6 +18,7 @@ public:
     Maze maze;
     Player player;
     Boom activeBomb;
+    Enemy enemies[2];
 
     CChildView();
     virtual ~CChildView();

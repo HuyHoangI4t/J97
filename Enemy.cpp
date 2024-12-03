@@ -1,13 +1,15 @@
 ﻿#include "pch.h"
 #include "Enemy.h"
+#include "random"
 
-Enemy::Enemy(int startX, int startY) : x(startX), y(startY) {
-
-  
+Enemy::Enemy(int startX, int startY) : x(startX), y(startY), maze() {
 }
 
 Enemy::~Enemy() {
-    
+    // Nếu bạn có tài nguyên cần giải phóng, ví dụ CImage
+    // if (!enemyImage.IsNull()) {
+    //     enemyImage.Destroy();
+    // }
 }
 
 void Enemy::SetPosition(int x, int y) {
@@ -23,28 +25,27 @@ int Enemy::GetY() const {
     return y;
 }
 
-void Enemy::Move( int rows, int cols) {
-    int maze[13][15];
+void Enemy::Move(const int map[13][15], int rows, int cols) {
     // Di chuyển kẻ địch ngẫu nhiên (trái, phải, lên, xuống)
     int direction = rand() % 4;  // Chọn một hướng ngẫu nhiên
     switch (direction) {
     case 0:  // Di chuyển lên
-        if (y > 0 && maze[y - 1][x] ==0) {  // Kiểm tra không chạm tường
+        if (y > 0 && map[y - 1][x] == 0) {  // Kiểm tra không gặp tường
             y--;
         }
         break;
     case 1:  // Di chuyển xuống
-        if (y < rows - 1 && maze[y + 1][x] == 0) {  // Kiểm tra không chạm tường
+        if (y < rows - 1 && map[y + 1][x] == 0) {  // Kiểm tra không gặp tường
             y++;
         }
         break;
     case 2:  // Di chuyển trái
-        if (x > 0 && maze[y][x - 1] == 0) {  // Kiểm tra không chạm tường
+        if (x > 0 && map[y][x - 1] == 0) {  // Kiểm tra không gặp tường
             x--;
         }
         break;
     case 3:  // Di chuyển phải
-        if (x < cols - 1 && maze[y][x + 1] == 0) {  // Kiểm tra không chạm tường
+        if (x < cols - 1 && map[y][x + 1] == 0) {  // Kiểm tra không gặp tường
             x++;
         }
         break;

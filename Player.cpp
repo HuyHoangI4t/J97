@@ -2,13 +2,13 @@
 #include "Player.h"
 
 Player::Player() : x(1), y(1) {
-    if (FAILED(playerImage.Load(_T("res/player.png")))) {
-        AfxMessageBox(_T("Failed to load player image!"));
-    }
+   
 }
 
 Player::~Player() {
-  
+    if (!playerImage.IsNull()) {
+        playerImage.Destroy();
+    }
 }
 
 void Player::setX(int x) {

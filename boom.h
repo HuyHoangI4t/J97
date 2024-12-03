@@ -23,7 +23,7 @@ public:
     int GetY() const;
     int GetRange() const;
     void Activate();
-    void Update() const;
+    void Update() ;
     void Draw(CDC* dc) const;
     bool IsExploded() const;
     bool GetActiveState() const;

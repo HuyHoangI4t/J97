@@ -11,7 +11,7 @@ private:
 
 
 public:
-    int* GetMap();
+ 
     Maze();
     void draw(CDC* dc) const;
     int GetCell(int row, int col) const;
@@ -19,4 +19,5 @@ public:
     int GetRows() const { return rows; }
     int GetCols() const { return cols; }
     void ExplosionAndItem(int bombX, int bombY, int range);
+    const int (*GetMap() const)[15] { return maze; }
 };

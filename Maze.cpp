@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Maze.h"
 
+
 int full[13][15] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -17,10 +18,7 @@ int full[13][15] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-int* Maze::GetMap()
-{
-    return &maze[0][0];
-}
+
 
 Maze::Maze() : size(50) {
     for (int i = 0; i < rows; ++i)
@@ -62,7 +60,6 @@ int Maze::GetCell(int row, int col) const {
 void Maze::SetCell(int row, int col, int value) {
     maze[row][col] = value;
 }
-
 void Maze::ExplosionAndItem(int bombX, int bombY, int range) {
     int dx[] = { -1, 1, 0, 0 };
     int dy[] = { 0, 0, -1, 1 };
@@ -75,12 +72,17 @@ void Maze::ExplosionAndItem(int bombX, int bombY, int range) {
             if (x < 0 || x >= rows || y < 0 || y >= cols) break;
 
             int cellValue = maze[x][y];
-            if (cellValue == 1) break;
+            if (cellValue == 1) break;  // Dừng lại nếu gặp tường
 
+            // Nếu gặp chướng ngại vật (2), phá hủy nó và sinh item (nếu cần)
             if (cellValue == 2) {
-                maze[x][y] = 0;
-                if (rand() % 2 == 0) maze[x][y] = 3;
-                break;
+                maze[x][y] = 0; // Xóa chướng ngại vật (đặt là đường đi)
+
+                // Nếu muốn sinh item ngẫu nhiên (50% xác suất)
+                if (rand() % 2 == 0) {
+                    maze[x][y] = 3;  // Sinh item (mã 3 cho item)
+                }
+                continue;  // Ngừng kiểm tra xa hơn trong hướng này (vì chướng ngại vật đã bị phá)
             }
         }
     }
