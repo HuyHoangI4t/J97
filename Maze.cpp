@@ -50,7 +50,7 @@ void Maze::draw(CDC* dc) const {
     }
 }
 
-int Maze::GetCell(int row, int col)  {
+int Maze::GetCell(int row, int col) const  {
     return maze[row][col];
 }
 

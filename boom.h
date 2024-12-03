@@ -2,7 +2,7 @@
 #include "Maze.h"
 #include <atlimage.h>
 #include <ctime>
-#include <afxwin.h>
+
 
 class Boom {
 private:
@@ -11,9 +11,7 @@ private:
     bool isActive;           // Trạng thái bom
     bool isExploded;         // Trạng thái đã nổ
     std::time_t activationTime; // Thời gian kích hoạt
-    CImage bombImage;        // Hình ảnh bom
-    CImage explosionImage;   // Hình ảnh nổ
-
+ 
 public:
     Boom();
     ~Boom();

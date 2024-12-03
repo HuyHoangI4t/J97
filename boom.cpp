@@ -1,17 +1,13 @@
 ﻿#include "pch.h"
 #include "Boom.h"
+#include "Maze.h"
 
 Boom::Boom() : x(0), y(0), range(1), isActive(false), isExploded(false), activationTime(0) {
 
 }
 
 Boom::~Boom() {
-    if (!bombImage.IsNull()) {
-        bombImage.Destroy();
-    }
-    if (!explosionImage.IsNull()) {
-        explosionImage.Destroy();
-    }
+   
 }
 
 void Boom::SetPosition(int x, int y) {
@@ -56,15 +52,26 @@ void Boom::Draw(CDC* dc) const {
     int size = 40;
     if (isActive && !isExploded) {
         CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
-        bombImage.Draw(dc->GetSafeHdc(), bombRect);
+        if (!bombImage.IsNull()) {
+            bombImage.Draw(dc->GetSafeHdc(), bombRect);
+        }
     }
     else if (isExploded) {
         for (int dx = -range; dx <= range; ++dx) {
             for (int dy = -range; dy <= range; ++dy) {
-                CRect explosionRect((x + dx) * size, (y + dy) * size,
-                    (x + dx + 1) * size, (y + dy + 1) * size);
-                explosionImage.Draw(dc->GetSafeHdc(), explosionRect);
-               
+                int nx = x + dx;
+                int ny = y + dy;
+
+                // Kiểm tra nếu ô nằm trong phạm vi bản đồ
+                if (nx >= 0 && nx < 13 && ny >= 0 && ny < 15) {
+                    
+                        CRect explosionRect(nx * size, ny * size,
+                            (nx + 1) * size, (ny + 1) * size);
+                        if (!explosionImage.IsNull()) {
+                            explosionImage.Draw(dc->GetSafeHdc(), explosionRect);
+                        }
+                    
+                }
             }
         }
     }

@@ -15,19 +15,27 @@ END_MESSAGE_MAP()
 
 CChildView::CChildView() : size(40), gameOver(false) {
     // Initialize enemies
-    enemies.push_back(Enemy(3, 3));  // Thêm 1 kẻ địch vào vị trí (3,3)
-    enemies.push_back(Enemy(7, 7));  // Thêm 1 kẻ địch vào vị trí (7,7)
+    enemies.push_back(Enemy(13, 1));  // Thêm 1 kẻ địch vào vị trí (3,3)
+    enemies.push_back(Enemy(13, 11));  // Thêm 1 kẻ địch vào vị trí (7,7)
 }
 
 CChildView::~CChildView() {
 }
 
 void CChildView::OnGameOver(bool win) {
+    if (gameOver) {
+        return;  // Không thực hiện thêm gì nếu game đã kết thúc
+    }
+
+    // Hiển thị thông báo win/lose
     CString message = win ? _T("You win!") : _T("You lose!");
     AfxMessageBox(message);
 
+    // Đặt gameOver là true để không hiển thị thông báo lần nữa
     gameOver = true;
-    PostQuitMessage(0);  // Thoát trò chơi sau thông báo
+    
+    // Thoát trò chơi
+    PostQuitMessage(0);
 }
 
 BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs) {
@@ -109,7 +117,7 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
             CRect oldCell(enemies[i].GetX() * size, enemies[i].GetY() * size,
                 (enemies[i].GetX() + 1) * size, (enemies[i].GetY() + 1) * size);
 
-            enemies[i].Move( maze.GetRows(), maze.GetCols());
+            enemies[i].Move(maze.GetRows(), maze.GetCols());
 
             CRect newCell(enemies[i].GetX() * size, enemies[i].GetY() * size,
                 (enemies[i].GetX() + 1) * size, (enemies[i].GetY() + 1) * size);
@@ -119,10 +127,12 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
         }
 
         // Kiểm tra nếu kẻ địch bị tiêu diệt
-        for (int i = 0; i < enemies.size(); ++i) {
-            if (enemies[i].IsDestroyed(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange())) {
-                // Đánh dấu kẻ địch đã bị tiêu diệt
-                enemies[i].SetPosition(-1, -1); // Cách này chỉ để tránh crash, bạn có thể thay bằng phương thức xóa kẻ địch
+        for (auto it = enemies.begin(); it != enemies.end(); ) {
+            if (it->IsDestroyed(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange())) {
+                it = enemies.erase(it);  // Xóa kẻ địch khỏi vector
+            }
+            else {
+                ++it;  // Tiếp tục với kẻ địch tiếp theo
             }
         }
 
@@ -135,12 +145,16 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
                 }
             }
         }
-
+        if (abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange() && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) {
+            if (!gameOver) {
+                OnGameOver(false);  // Người chơi thua nếu ở trong phạm vi nổ của bom
+            }
+        }
         // Kiểm tra nếu thắng
-        bool allEnemiesDestroyed = true;
+        bool allEnemiesDestroyed = false;
         for (const auto& enemy : enemies) {
-            if (enemy.GetX() != -1) {
-                allEnemiesDestroyed = false;
+            if (enemy.GetX() != -1) {  // Kẻ địch chưa bị tiêu diệt
+                allEnemiesDestroyed ;
                 break;
             }
         }
@@ -152,5 +166,5 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
         Invalidate();
     }
 
-    CWnd::OnTimer(nIDEvent);
+    CWnd::OnTimer(nIDEvent);  // Gọi hàm OnTimer của lớp cha
 }

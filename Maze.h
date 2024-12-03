@@ -14,7 +14,7 @@ public:
  
     Maze();
     void draw(CDC* dc) const;
-    int GetCell(int row, int col);
+    int GetCell(int row, int col) const;
     void SetCell(int row, int col, int value);
     int GetRows() const { return rows; }
     int GetCols() const { return cols; }
