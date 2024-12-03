@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <atlimage.h>
+#include "atlimage.h"
 
 class Player {
 private:

@@ -53,7 +53,7 @@ void Boom::Draw(CDC* dc) const {
     CImage bombImage, explosionImage;
     HRESULT hr = bombImage.Load(_T("res/bomb.png"));
     HRESULT hr1 = explosionImage.Load(_T("res/explosion.png"));
-    int size = 50;
+    int size = 40;
     if (isActive && !isExploded) {
         CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
         bombImage.Draw(dc->GetSafeHdc(), bombRect);

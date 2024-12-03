@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "framework.h"
-#include "Bomb.h"
+#include "Boom.h"
 #include "ChildView.h"
 
 #ifdef _DEBUG
@@ -13,13 +13,13 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
     ON_WM_TIMER()
 END_MESSAGE_MAP()
 
-CChildView::CChildView() : size(50), gameOver(false) {
-    enemies[0] = Enemy(3, 3);  // Thêm 1 kẻ địch vào vị trí (3,3)
-    enemies[1] = Enemy(7, 7);  // Thêm 1 kẻ địch vào vị trí (7,7)
+CChildView::CChildView() : size(40), gameOver(false) {
+    // Initialize enemies
+    enemies.push_back(Enemy(3, 3));  // Thêm 1 kẻ địch vào vị trí (3,3)
+    enemies.push_back(Enemy(7, 7));  // Thêm 1 kẻ địch vào vị trí (7,7)
 }
 
 CChildView::~CChildView() {
-
 }
 
 void CChildView::OnGameOver(bool win) {
@@ -47,11 +47,10 @@ void CChildView::OnPaint() {
     maze.draw(&dc);    // Vẽ bản đồ
     player.Draw(&dc);  // Vẽ nhân vật
 
-  
-    for (int i = 0; i < 2; ++i) {
-        enemies[i].Draw(&dc);
+    // Vẽ các kẻ địch
+    for (auto& enemy : enemies) {
+        enemy.Draw(&dc);
     }
-  
 
     // Vẽ bom
     activeBomb.Draw(&dc);  // Vẽ bom nếu có
@@ -63,7 +62,7 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 
     switch (nChar) {
     case 'W':
-        if (player.getY() > 0 && maze.GetCell(player.getY() - 1, player.getX()) ==0)
+        if (player.getY() > 0 && maze.GetCell(player.getY() - 1, player.getX()) == 0)
             player.setY(player.getY() - 1);
         break;
     case 'A':
@@ -82,9 +81,9 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
         // Đặt bom
         if (!activeBomb.GetActiveState()) {
             activeBomb.SetPosition(player.getX(), player.getY());
-            activeBomb.SetRange(3);  // Phạm vi nổ
+            activeBomb.SetRange(2);  // Phạm vi nổ
             activeBomb.Activate();   // Kích hoạt bom
-            SetTimer(1, 1000, NULL); // 2 giây để bom nổ
+            SetTimer(1, 1500, NULL); // 2 giây để bom nổ
         }
         break;
     }
@@ -103,36 +102,55 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
         if (activeBomb.IsExploded()) {
             maze.ExplosionAndItem(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange());
             activeBomb.Reset();
-
         }
 
-        for (int i = 0; i < 2; ++i) {
-            enemies[i].Move(maze.GetMap(), maze.GetRows(), maze.GetCols());  // Di chuyển kẻ địch
+        // Di chuyển các kẻ địch
+        for (int i = 0; i < enemies.size(); ++i) {
+            CRect oldCell(enemies[i].GetX() * size, enemies[i].GetY() * size,
+                (enemies[i].GetX() + 1) * size, (enemies[i].GetY() + 1) * size);
+
+            enemies[i].Move( maze.GetRows(), maze.GetCols());
+
+            CRect newCell(enemies[i].GetX() * size, enemies[i].GetY() * size,
+                (enemies[i].GetX() + 1) * size, (enemies[i].GetY() + 1) * size);
+
+            InvalidateRect(oldCell, false);
+            InvalidateRect(newCell, false);
         }
 
         // Kiểm tra nếu kẻ địch bị tiêu diệt
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < enemies.size(); ++i) {
             if (enemies[i].IsDestroyed(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange())) {
-                // Xóa kẻ địch nếu bị nổ
-                enemies[i].SetPosition(-1, -1);  // Cách này chỉ để tránh crash, bạn có thể thay bằng phương thức xóa kẻ địch
+                // Đánh dấu kẻ địch đã bị tiêu diệt
+                enemies[i].SetPosition(-1, -1); // Cách này chỉ để tránh crash, bạn có thể thay bằng phương thức xóa kẻ địch
             }
         }
 
-        // Kiểm tra nếu kẻ địch chạm vào nhân vật, thì thua
-        for (int i = 0; i < 2; ++i) {
+        // Kiểm tra nếu kẻ địch chạm vào nhân vật
+        for (int i = 0; i < enemies.size(); ++i) {
             if (enemies[i].GetX() == player.getX() && enemies[i].GetY() == player.getY()) {
-                if (!gameOver) {  // Nếu chưa hiển thị thông báo
+                if (!gameOver) {
                     OnGameOver(false);  // Người chơi thua
+                    break;
                 }
-                return;  // Không tiếp tục kiểm tra sau khi game over
             }
         }
 
         // Kiểm tra nếu thắng
-        if (enemies[0].GetX() == -1 && enemies[1].GetX() == -1 && !gameOver) {  // Nếu không còn kẻ địch
+        bool allEnemiesDestroyed = true;
+        for (const auto& enemy : enemies) {
+            if (enemy.GetX() != -1) {
+                allEnemiesDestroyed = false;
+                break;
+            }
+        }
+
+        if (allEnemiesDestroyed && !gameOver) {
             OnGameOver(true);  // Người chơi thắng
         }
 
-        CWnd::OnTimer(nIDEvent);
+        Invalidate();
     }
+
+    CWnd::OnTimer(nIDEvent);
 }

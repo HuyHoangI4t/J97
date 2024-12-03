@@ -2,6 +2,7 @@
 #include "Maze.h"
 #include <atlimage.h>
 #include <ctime>
+#include <afxwin.h>
 
 class Boom {
 private:

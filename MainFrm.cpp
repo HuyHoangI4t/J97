@@ -61,8 +61,8 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 		return FALSE;
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
-	cs.cx = 50 * 15 +225;
-	cs.cy = 50 * 13 + 53;
+	cs.cx = 40 * 15 +25;
+	cs.cy = 40 * 13 + 53;
 	cs.dwExStyle &= ~WS_EX_CLIENTEDGE;
 	cs.lpszClass = AfxRegisterWndClass(0);
 	return TRUE;

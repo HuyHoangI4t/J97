@@ -28,7 +28,7 @@ int Player::getY() const {
 }
 
 void Player::Draw(CDC* dc) const {
-    int size = 50;
+    int size = 40;
     CImage playerImage;
     HRESULT hr = playerImage.Load(_T("res/player.png"));
     CRect playerRect(x * size, y * size, (x + 1) * size, (y + 1) * size);

@@ -3,28 +3,26 @@
 #include "Player.h"
 #include "Boom.h"
 #include "Enemy.h"
-#include "afxmt.h"
-
+#include "vector"
 
 class CChildView : public CWnd {
 private:
-        // Thời gian bắt đầu trò chơi
-    CString timeDisplay;  // Thời gian chơi
-    
-    bool gameOver;
+    bool gameOver;               // Trạng thái kết thúc game
+    int size;                    // Kích thước ô vuông
+    Maze maze;                   // Bản đồ
+    Player player;               // Nhân vật
+    Boom activeBomb;             // Bom hiện tại
+    std::vector<Enemy> enemies;  // Danh sách kẻ địch
 
 public:
-    int size;
-    Maze maze;
-    Player player;
-    Boom activeBomb;
-    Enemy enemies[2];
-
     CChildView();
     virtual ~CChildView();
+
     void OnGameOver(bool win);
+
 protected:
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+
     afx_msg void OnPaint();
     afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
     afx_msg void OnTimer(UINT_PTR nIDEvent);
