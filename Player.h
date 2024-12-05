@@ -8,7 +8,7 @@ private:
 
 public:
     Player();
-    ~Player();
+    
 
     void setX(int x);
     void setY(int y);

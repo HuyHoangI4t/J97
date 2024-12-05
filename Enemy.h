@@ -1,21 +1,26 @@
 ﻿#pragma once
-#include "atlimage.h"
-#include "Maze.h"
 
 class Enemy {
 private:
-    int x, y;         // Vị trí hiện tại của kẻ địch
-    int size;         // Kích thước ô (mặc định là 50)
-    CImage enemyImage; // Hình ảnh của kẻ địch
-   
+    int x, y;  // Vị trí của kẻ địch
+    int targetX, targetY;  // Vị trí mục tiêu
+    int size;  // Kích thước mỗi ô
+
+    // Chọn mục tiêu mới
+    void RandomTarget(const int maze[13][15], int rows, int cols);
+
 public:
-    Enemy(int startX = 0, int startY = 0);
-    ~Enemy();
-    int map[13][15];
-    void SetPosition(int x, int y); // Đặt vị trí mới cho kẻ địch
-    int GetX() const;              // Lấy vị trí x
-    int GetY() const;              // Lấy vị trí y
-    void Move( int rows, int cols); // Di chuyển kẻ địch
-    void Draw(CDC* dc) const;      // Vẽ kẻ địch
-    bool IsDestroyed(int bombX, int bombY, int range) const; // Kiểm tra kẻ địch bị nổ
+    Enemy(int startX, int startY);
+
+    int GetX() const;
+    int GetY() const;
+
+    void SetPosition(int newX, int newY);
+
+    // Hàm di chuyển đơn giản
+    void Move(const int maze[13][15], int rows, int cols);
+
+    void Draw(CDC* dc) const;
+
+    bool IsDestroyed(int bombX, int bombY, int range) const;
 };

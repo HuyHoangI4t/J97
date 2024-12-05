@@ -17,15 +17,15 @@ CChildView::CChildView() : size(40), gameOver(false) {
     // Initialize enemies
     enemies.push_back(Enemy(13, 1));  // Thêm 1 kẻ địch vào vị trí (3,3)
     enemies.push_back(Enemy(13, 11));  // Thêm 1 kẻ địch vào vị trí (7,7)
+
+    // Khởi tạo timer cho bom nổ và di chuyển của kẻ địch
+   
 }
 
-CChildView::~CChildView() {
-}
+CChildView::~CChildView() {}
 
 void CChildView::OnGameOver(bool win) {
-    if (gameOver) {
-        return;  // Không thực hiện thêm gì nếu game đã kết thúc
-    }
+    if (gameOver) return;
 
     // Hiển thị thông báo win/lose
     CString message = win ? _T("You win!") : _T("You lose!");
@@ -33,9 +33,19 @@ void CChildView::OnGameOver(bool win) {
 
     // Đặt gameOver là true để không hiển thị thông báo lần nữa
     gameOver = true;
-    
+
     // Thoát trò chơi
     PostQuitMessage(0);
+}
+void CChildView::StartTimers() {
+    
+   
+    SetTimer(2, 1000, NULL); // 1 giây
+}
+
+void CChildView::StopTimers() {
+    KillTimer(1);
+    KillTimer(2);
 }
 
 BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs) {
@@ -54,7 +64,7 @@ void CChildView::OnPaint() {
     CPaintDC dc(this); // device context for painting
     maze.draw(&dc);    // Vẽ bản đồ
     player.Draw(&dc);  // Vẽ nhân vật
-
+    SetTimer(2, 500, NULL); // 2 giây
     // Vẽ các kẻ địch
     for (auto& enemy : enemies) {
         enemy.Draw(&dc);
@@ -67,7 +77,7 @@ void CChildView::OnPaint() {
 void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
     CRect oldCell(player.getX() * size, player.getY() * size,
         (player.getX() + 1) * size, (player.getY() + 1) * size);
-
+    
     switch (nChar) {
     case 'W':
         if (player.getY() > 0 && maze.GetCell(player.getY() - 1, player.getX()) == 0)
@@ -87,13 +97,13 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
         break;
     case VK_SPACE:
         // Đặt bom
-        if (!activeBomb.GetActiveState()) {
+        if (!activeBomb.IsExploded()) {
             activeBomb.SetPosition(player.getX(), player.getY());
-            activeBomb.SetRange(2);  // Phạm vi nổ
+            activeBomb.SetRange(1.5);  // Phạm vi nổ
             activeBomb.Activate();   // Kích hoạt bom
-            SetTimer(1, 1500, NULL); // 2 giây để bom nổ
+            SetTimer(1, 2000, NULL); // 2 giây
         }
-        break;
+        break; 
     }
 
     CRect newCell(player.getX() * size, player.getY() * size,
@@ -101,70 +111,78 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
 
     InvalidateRect(oldCell, TRUE);
     InvalidateRect(newCell, TRUE);
+    
 }
 
 void CChildView::OnTimer(UINT_PTR nIDEvent) {
-    if (nIDEvent == 1) {
-        activeBomb.Update();
+    
+    if (nIDEvent == 1) { // Bom nổ sau 2 giây
+        activeBomb.Update(maze);
 
         if (activeBomb.IsExploded()) {
-            maze.ExplosionAndItem(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange());
+            // Xử lý vụ nổ (ví dụ: vẽ hiệu ứng nổ)
+            
+            maze.Explosion(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange());
+
+            // Kiểm tra nếu bom tiêu diệt kẻ địch
+            for (auto it = enemies.begin(); it != enemies.end();) {
+                if (abs(it->GetX() - activeBomb.GetX()) <= activeBomb.GetRange() &&
+                    abs(it->GetY() - activeBomb.GetY()) <= activeBomb.GetRange()) {
+                    it = enemies.erase(it);  // Xóa kẻ địch khỏi danh sách
+                }
+                else {
+                    ++it;  // Tiếp tục với kẻ địch tiếp theo
+                }
+            }
+            maze.SetCell(activeBomb.GetX(), activeBomb.GetY(), 0);  // Xóa bom khỏi bản đồ
             activeBomb.Reset();
+            Invalidate();  // Vẽ lại màn hình để hiển thị vụ nổ
         }
 
-        // Di chuyển các kẻ địch
-        for (int i = 0; i < enemies.size(); ++i) {
-            CRect oldCell(enemies[i].GetX() * size, enemies[i].GetY() * size,
-                (enemies[i].GetX() + 1) * size, (enemies[i].GetY() + 1) * size);
-
-            enemies[i].Move(maze.GetRows(), maze.GetCols());
-
-            CRect newCell(enemies[i].GetX() * size, enemies[i].GetY() * size,
-                (enemies[i].GetX() + 1) * size, (enemies[i].GetY() + 1) * size);
-
-            InvalidateRect(oldCell, false);
-            InvalidateRect(newCell, false);
+        // Kiểm tra nếu người chơi nằm trong phạm vi nổ của bom
+        if (abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange() && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) {
+            OnGameOver(false);  // Người chơi thua nếu trong phạm vi nổ của bom
+            player.setX(-1);
+            player.setY(-1);
         }
+    }
+    else if (nIDEvent == 2) { // Di chuyển các kẻ địch
+        for (auto& enemy : enemies) {
+            CRect oldCell(enemy.GetX() * size, enemy.GetY() * size,
+                (enemy.GetX() + 1) * size, (enemy.GetY() + 1) * size);
 
-        // Kiểm tra nếu kẻ địch bị tiêu diệt
-        for (auto it = enemies.begin(); it != enemies.end(); ) {
-            if (it->IsDestroyed(activeBomb.GetX(), activeBomb.GetY(), activeBomb.GetRange())) {
-                it = enemies.erase(it);  // Xóa kẻ địch khỏi vector
-            }
-            else {
-                ++it;  // Tiếp tục với kẻ địch tiếp theo
-            }
+            enemy.Move(maze.GetMaze(), maze.GetRows(), maze.GetCols());
+
+            CRect newCell(enemy.GetX() * size, enemy.GetY() * size,
+                (enemy.GetX() + 1) * size, (enemy.GetY() + 1) * size);
+
+            InvalidateRect(oldCell, TRUE);
+            InvalidateRect(newCell, TRUE);
         }
 
         // Kiểm tra nếu kẻ địch chạm vào nhân vật
-        for (int i = 0; i < enemies.size(); ++i) {
-            if (enemies[i].GetX() == player.getX() && enemies[i].GetY() == player.getY()) {
+        for (const auto& enemy : enemies) {
+            if (enemy.GetX() == player.getX() && enemy.GetY() == player.getY()) {
                 if (!gameOver) {
                     OnGameOver(false);  // Người chơi thua
-                    break;
                 }
+                return;
             }
         }
-        if (abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange() && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) {
-            if (!gameOver) {
-                OnGameOver(false);  // Người chơi thua nếu ở trong phạm vi nổ của bom
-            }
-        }
-        // Kiểm tra nếu thắng
-        bool allEnemiesDestroyed = false;
-        for (const auto& enemy : enemies) {
-            if (enemy.GetX() != -1) {  // Kẻ địch chưa bị tiêu diệt
-                allEnemiesDestroyed ;
-                break;
-            }
-        }
-
-        if (allEnemiesDestroyed && !gameOver) {
-            OnGameOver(true);  // Người chơi thắng
-        }
-
-        Invalidate();
     }
 
-    CWnd::OnTimer(nIDEvent);  // Gọi hàm OnTimer của lớp cha
+    // Kiểm tra nếu tất cả kẻ địch đã bị tiêu diệt
+    bool allEnemiesDestroyed = true;
+    for (const auto& enemy : enemies) {
+        if (enemy.GetX() != NULL) {  // Kẻ địch còn tồn tại
+            allEnemiesDestroyed = false;
+            break;
+        }
+    }
+
+    if (allEnemiesDestroyed && !gameOver) {
+        OnGameOver(true);  // Người chơi thắng
+    }
+
+    CWnd::OnTimer(nIDEvent);
 }

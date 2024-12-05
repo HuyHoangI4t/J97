@@ -1,60 +1,74 @@
 ﻿#include "pch.h"
 #include "Boom.h"
-#include "Maze.h"
+#include "Maze.h" 
 
-Boom::Boom() : x(0), y(0), range(1), isActive(false), isExploded(false), activationTime(0) {
-
+Boom::Boom() : x(-1), y(-1), range(1), isActive(false), isExploded(false) {
+  
 }
 
-Boom::~Boom() {
-   
+
+
+void Boom::SetPosition(int newX, int newY) {
+    x = newX;
+    y = newY;
 }
 
-void Boom::SetPosition(int x, int y) {
-    this->x = x;
-    this->y = y;
+void Boom::SetRange(int newRange) {
+    range = newRange;
 }
 
-void Boom::SetRange(int range) {
-    this->range = range;
-}
-
-int Boom::GetX() const {
+int Boom::GetX() const
+{
     return x;
 }
 
-int Boom::GetY() const {
+int Boom::GetY() const
+{
     return y;
 }
 
-int Boom::GetRange() const {
+int Boom::GetRange() const
+{
     return range;
 }
 
 void Boom::Activate() {
     isActive = true;
     isExploded = false;
-    activationTime = std::time(nullptr);
 }
 
-void Boom::Update()  {
+
+void Boom::Reset() {
+    isActive = false;
+    isExploded = false;
+}
+
+void Boom::Update(Maze& maze) {
+    // Kiểm tra bom có nổ chưa
     if (isActive && !isExploded) {
-        if (std::difftime(std::time(nullptr), activationTime) >= 2) {
-            isExploded = true;
-        }
+        Explode(maze);  // Gọi hàm Explode để xử lý vụ nổ
     }
+}
+
+void Boom::Explode(Maze& maze) {
+    isExploded = true;  // Đánh dấu bom đã nổ
+    maze.Explosion(x, y, range);  // Cập nhật maze với vụ nổ
+}
+
+bool Boom::IsExploded() const
+{
+    return false;
 }
 
 void Boom::Draw(CDC* dc) const {
     CImage bombImage, explosionImage;
-    HRESULT hr = bombImage.Load(_T("res/bomb.png"));
-    HRESULT hr1 = explosionImage.Load(_T("res/explosion.png"));
+    HRESULT b = bombImage.Load(_T("res/bomb.png"));
+    HRESULT ex = explosionImage.Load(_T("res/explosion.png"));
+
     int size = 40;
     if (isActive && !isExploded) {
         CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
-        if (!bombImage.IsNull()) {
-            bombImage.Draw(dc->GetSafeHdc(), bombRect);
-        }
+        bombImage.Draw(dc->GetSafeHdc(), bombRect);  // Vẽ bom nếu nó còn hoạt động
     }
     else if (isExploded) {
         for (int dx = -range; dx <= range; ++dx) {
@@ -62,32 +76,12 @@ void Boom::Draw(CDC* dc) const {
                 int nx = x + dx;
                 int ny = y + dy;
 
-                // Kiểm tra nếu ô nằm trong phạm vi bản đồ
+                // Kiểm tra ô nằm trong phạm vi bản đồ
                 if (nx >= 0 && nx < 13 && ny >= 0 && ny < 15) {
-                    
-                        CRect explosionRect(nx * size, ny * size,
-                            (nx + 1) * size, (ny + 1) * size);
-                        if (!explosionImage.IsNull()) {
-                            explosionImage.Draw(dc->GetSafeHdc(), explosionRect);
-                        }
-                    
+                    CRect explosionRect(nx * size, ny * size, (nx + 1) * size, (ny + 1) * size);
+                    explosionImage.Draw(dc->GetSafeHdc(), explosionRect);  // Vẽ hiệu ứng vụ nổ
                 }
             }
         }
     }
-
-    
-}
-
-bool Boom::IsExploded() const {
-    return isExploded;
-}
-
-bool Boom::GetActiveState() const {
-    return isActive;
-}
-
-void Boom::Reset() {
-    isActive = false;
-    isExploded = false;
 }

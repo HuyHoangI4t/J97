@@ -20,7 +20,10 @@ public:
 
     void OnGameOver(bool win);
 
+    void StartTimers();
+
 protected:
+    void StopTimers();
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
     afx_msg void OnPaint();

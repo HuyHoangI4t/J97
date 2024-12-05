@@ -2,14 +2,9 @@
 #include "Player.h"
 
 Player::Player() : x(1), y(1) {
-   
+
 }
 
-Player::~Player() {
-    if (!playerImage.IsNull()) {
-        playerImage.Destroy();
-    }
-}
 
 void Player::setX(int x) {
     this->x = x;
