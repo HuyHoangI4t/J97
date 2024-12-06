@@ -4,12 +4,8 @@
 class Player {
 private:
     int x, y;                 // Tọa độ nhân vật
-    CImage playerImage;       // Hình ảnh nhân vật
-
 public:
     Player();
-    
-
     void setX(int x);
     void setY(int y);
     int getX() const;

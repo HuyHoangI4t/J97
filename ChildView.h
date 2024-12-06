@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "vector"
 
+
 class CChildView : public CWnd {
 private:
     bool gameOver;               // Trạng thái kết thúc game
@@ -20,7 +21,7 @@ public:
 
     void OnGameOver(bool win);
 
-    void StartTimers();
+   
 
 protected:
     void StopTimers();

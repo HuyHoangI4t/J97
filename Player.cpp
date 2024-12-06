@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Player.h"
 
-Player::Player() : x(1), y(1) {
+Player::Player() : x(1), y(11) {
 
 }
 
@@ -23,7 +23,7 @@ int Player::getY() const {
 }
 
 void Player::Draw(CDC* dc) const {
-    int size = 40;
+    int size = 50;
     CImage playerImage;
     HRESULT hr = playerImage.Load(_T("res/player.png"));
     CRect playerRect(x * size, y * size, (x + 1) * size, (y + 1) * size);

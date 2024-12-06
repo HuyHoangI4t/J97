@@ -4,17 +4,17 @@
 
 int full[13][15] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-    {1, 2, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1},
-    {1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1},
-    {1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 0, 0, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1},
-    {1, 0, 0, 2, 2, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1},
-    {1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {1, 2, 2, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1},
+    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {1, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
+    {1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+    {1, 0, 1, 2, 1, 2, 1, 0, 1, 2, 1, 0, 1, 0, 1},
+    {1, 0, 0, 2, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
@@ -25,7 +25,7 @@ const int(*Maze::GetMaze() const)[15]
     return maze;
 }
 
-Maze::Maze() : size(40)  {
+Maze::Maze() : size(50)  {
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             maze[i][j] = full[i][j];
@@ -50,12 +50,13 @@ void Maze::draw(CDC* dc) const {
             }
             else if (maze[i][j] == 2) {
                 blockImage.Draw(dc->GetSafeHdc(), cellRect);
-            }
+            }                                             
         }
     }
 }
 
 int Maze::GetCell(int row, int col) const {
+
     return maze[row][col];
 }
 
@@ -64,31 +65,28 @@ void Maze::SetCell(int row, int col, int value) {
 }
 
 void Maze::Explosion(int bombX, int bombY, int range) {
-    int dx[] = { -1, 1, 0, 0 };  // Di chuyển theo các hướng (lên, xuống, trái, phải)
-    int dy[] = { 0, 0, -1, 1 };
+    for (int r = 1; r <= range; ++r) {
+        // Nổ lên (Chỉ nổ lên nếu không gặp tường)
+        if (bombY - r >= 0 && maze[bombY - r][bombX] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
+            maze[bombY - r][bombX] = 0;  // Xóa vật cản
+        }
 
-    // Xử lý vụ nổ theo từng hướng
-    for (int dir = 0; dir < 4; ++dir) {
-        for (int step = 1; step <= range; ++step) {
-            int x = bombX + dx[dir] * step;
-            int y = bombY + dy[dir] * step;
+        // Nổ xuống (Chỉ nổ xuống nếu không gặp tường)
+        if (bombY + r < rows && maze[bombY + r][bombX] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
+            maze[bombY + r][bombX] = 0;  // Xóa vật cản
+        }
 
-            // Kiểm tra nếu ô nằm trong phạm vi bản đồ
-            if (x < 0 || x >= rows || y < 0 || y >= cols)
-                break;
+        // Nổ trái (Chỉ nổ trái nếu không gặp tường)
+        if (bombX - r >= 0 && maze[bombY][bombX - r] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
+            maze[bombY][bombX - r] = 0;  // Xóa vật cản
+        }
 
-            int cellValue = maze[x][y];
-            
-            // Nếu gặp tường, dừng vụ nổ tại đó
-            if (cellValue == 1) 
-                break;
-
-            // Nếu gặp chướng ngại vật, phá hủy nó và dừng vụ nổ
-            if (cellValue == 2) {
-                maze[x][y] = 0;  // Thay chướng ngại vật thành đường đi
-                break;
-            }
+        // Nổ phải (Chỉ nổ phải nếu không gặp tường)
+        if (bombX + r < cols && maze[bombY][bombX + r] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
+            maze[bombY][bombX + r] = 0;  // Xóa vật cản
         }
     }
 }
+
+
 

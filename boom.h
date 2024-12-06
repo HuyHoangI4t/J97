@@ -1,30 +1,26 @@
 ﻿#pragma once
 #include "Maze.h"
-#include <atlimage.h>
-#include <ctime>
-
 
 class Boom {
 private:
-    int x, y;                // Tọa độ bom
-    int range;               // Phạm vi nổ
-    bool isActive;           // Trạng thái bom
-    bool isExploded;         // Trạng thái đã nổ
-    std::time_t activationTime; // Thời gian kích hoạt
+    int x, y;
+    int range;       // Phạm vi nổ của quả bom
+    bool isActive;   // Trạng thái của quả bom có hoạt động hay không
+    bool isExploded; // Trạng thái của quả bom đã nổ hay chưa
 
 public:
+    Maze map;
     Boom();
-  
-    
-    void SetPosition(int x, int y);
-    void SetRange(int range);
+    void SetPosition(int newX, int newY);
+    void SetRange(int newRange);
     int GetX() const;
     int GetY() const;
     int GetRange() const;
     void Activate();
-    void Update(Maze& maze);
-    void Draw(CDC* dc) const;               // vẽ
-    void Explode(Maze& maze);
-    bool IsExploded() const;                // bom nổ
-    void Reset();
+    void Reset();                           // Đặt lại trạng thái của quả bom (khôi phục về trạng thái ban đầu)
+    bool IsExploded() const;                // Kiểm tra xem quả bom đã nổ hay chưa
+    void Update(Maze& maze);                // Cập nhật bom mỗi khi thời gian trôi qua
+    void Explode(Maze& maze);               // Xử lý vụ nổ
+    void Draw(CDC* dc) const;
+
 };
