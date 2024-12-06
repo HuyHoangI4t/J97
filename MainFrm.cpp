@@ -42,8 +42,7 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	SetTimer(2, 500, NULL);
-	SetTimer(3, 500, NULL);
+	
 	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 

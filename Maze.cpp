@@ -87,6 +87,3 @@ void Maze::Explosion(int bombX, int bombY, int range) {
         }
     }
 }
-
-
-

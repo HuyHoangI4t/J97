@@ -34,6 +34,7 @@ void Boom::Activate() {
 void Boom::Reset() {
     isActive = false;
     isExploded = false;
+    
 }
 
 bool Boom::IsExploded() const {
