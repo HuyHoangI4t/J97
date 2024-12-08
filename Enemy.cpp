@@ -55,7 +55,7 @@ void Enemy::Move(const int maze[13][15], int rows, int cols) {
 
 void Enemy::Draw(CDC* dc) const {
     CImage enemyImage; 
-    HRESULT hr = enemyImage.Load(_T("res/enemy.png"));                              // Tải hình ảnh kẻ địch từ file
+    HRESULT hr = enemyImage.Load(_T("res/enemy2.png"));                              // Tải hình ảnh kẻ địch từ file
     /*HRESULT hr2 = enemyImage.Load(_T("res/enemy2.png"));*/  
     CRect enemyRect(x * size, y * size, (x + 1) * size, (y + 1) * size);            // Định nghĩa vị trí vẽ kẻ địch
     enemyImage.Draw(dc->GetSafeHdc(), enemyRect);                                   // Vẽ hình ảnh kẻ địch lên màn hình tại vị trí đã xác định

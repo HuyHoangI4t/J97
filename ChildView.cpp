@@ -1,4 +1,6 @@
-﻿#include "pch.h"
+﻿//                                                 @Ai hỏi
+
+#include "pch.h"
 #include "framework.h"
 #include "ChildView.h"
 #include <mmsystem.h> 
@@ -16,8 +18,8 @@ END_MESSAGE_MAP()
 
 CChildView::CChildView() : size(50), gameOver(false), gameWon(false) {
     // Khởi tạo kẻ địch
-    enemies.push_back(Enemy(1, 11)); 
-    enemies.push_back(Enemy(1, 11)); 
+    enemies.push_back(Enemy(10, 3)); 
+    enemies.push_back(Enemy(10, 7)); 
 }
 
 CChildView::~CChildView() {}
@@ -88,22 +90,22 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
         if (player.getX() < maze.GetCols() - 1 && maze.GetCell(player.getY(), player.getX() + 1) == 0)
             player.setX(player.getX() + 1);
         break;
-    case VK_UP: 
-        if (player.getY() > 0 && maze.GetCell(player.getY() - 1, player.getX()) == 0)
-            player.setY(player.getY() - 1);
-        break;
-    case VK_LEFT: // Trái
-        if (player.getX() > 0 && maze.GetCell(player.getY(), player.getX() - 1) == 0)
-            player.setX(player.getX() - 1);
-        break;
-    case VK_DOWN: // Xuống
-        if (player.getY() < maze.GetRows() - 1 && maze.GetCell(player.getY() + 1, player.getX()) == 0)
-            player.setY(player.getY() + 1);
-        break;
-    case VK_RIGHT: // Phải 
-        if (player.getX() < maze.GetCols() - 1 && maze.GetCell(player.getY(), player.getX() + 1) == 0)
-            player.setX(player.getX() + 1);
-        break;
+    //case VK_UP: 
+    //    if (player.getY() > 0 && maze.GetCell(player.getY() - 1, player.getX()) == 0)
+    //        player.setY(player.getY() - 1);
+    //    break;
+    //case VK_LEFT: // Trái
+    //    if (player.getX() > 0 && maze.GetCell(player.getY(), player.getX() - 1) == 0)
+    //        player.setX(player.getX() - 1);
+    //    break;
+    //case VK_DOWN: // Xuống
+    //    if (player.getY() < maze.GetRows() - 1 && maze.GetCell(player.getY() + 1, player.getX()) == 0)
+    //        player.setY(player.getY() + 1);
+    //    break;
+    //case VK_RIGHT: // Phải 
+    //    if (player.getX() < maze.GetCols() - 1 && maze.GetCell(player.getY(), player.getX() + 1) == 0)
+    //        player.setX(player.getX() + 1);
+    //    break;
     case 'E':
         SetTimer(2, 500, NULL); 
         break;
