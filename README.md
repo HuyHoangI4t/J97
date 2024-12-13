@@ -1,7 +1,7 @@
-# J97 - Bomber Game
+# Bomber Game
 
 ## 📝 Giới thiệu
-J97 là một trò chơi đặt bom (Bomber Game) được phát triển bằng **MFC (Microsoft Foundation Class)**, trong khuôn khổ môn học **Lập trình hướng đối tượng**.  
+Dự án này là một trò chơi đặt bom (Bomber Game) được phát triển bằng **MFC (Microsoft Foundation Class)**, trong khuôn khổ môn học **Lập trình hướng đối tượng**.  
 Trò chơi tái hiện lối chơi cổ điển, nơi người chơi đặt bom để phá vật cản, tiêu diệt kẻ thù, và vượt qua các màn chơi với độ khó tăng dần.
 
 Dự án được thực hiện bởi nhóm sinh viên **Trường Đại học Tây Nguyên**, dưới sự hướng dẫn của cô **Trương Thị Hương Giang**.
@@ -9,7 +9,7 @@ Dự án được thực hiện bởi nhóm sinh viên **Trường Đại học 
 ---
 
 ## ✨ Tính năng nổi bật
-- **Điều khiển nhân vật**: Dễ dàng di chuyển bằng các phím mũi tên.
+- **Điều khiển nhân vật**: Dễ dàng di chuyển bằng các phím `W` , `A` , `S` , `D`.
 - **Hệ thống bom**: Đặt bom, phá vật cản và tiêu diệt kẻ thù.
 - **Kẻ thù AI thông minh**: Di chuyển ngẫu nhiên hoặc bám sát người chơi.
 - **Thu thập vật phẩm**: Tăng tốc độ, tăng số lượng bom, mở rộng phạm vi nổ.
@@ -44,7 +44,7 @@ cd J97
 ```
 
 ### Mở dự án trong Visual Studio
-- Tìm tệp `J97.sln` và mở bằng **Microsoft Visual Studio**.
+- Tìm tệp `Bomb.sln` và mở bằng **Microsoft Visual Studio**.
 
 ### Cài đặt MFC trong Visual Studio
 1. Mở **Visual Studio Installer**.
