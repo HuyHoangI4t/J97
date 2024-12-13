@@ -16,7 +16,7 @@ int Enemy::GetY() const {
 
 
 // Thuật toán của hàm này là chọn vị trí đích ngẫu nhiên trên bản đồ rồi đi tới đó nếu đi đến chọn lại đích
-void Enemy::RandomTarget(const int maze[13][15], int rows, int cols) {
+void Enemy::RandomTarget(const int maze[15][15], int rows, int cols) {
     std::mt19937 gen(static_cast<unsigned int>(time(0))); 
     std::uniform_int_distribution<> distribX(1, cols - 2);  // ngẫu nhiên cho tọa độ x (tránh tường)
     std::uniform_int_distribution<> distribY(1, rows - 2);  // ngẫu nhiên cho tọa độ y (tránh tường)
@@ -28,11 +28,11 @@ void Enemy::RandomTarget(const int maze[13][15], int rows, int cols) {
 }
 
 // Hàm di chuyển kẻ địch trong mê cung
-void Enemy::Move(const int maze[13][15], int rows, int cols) {
+void Enemy::Move(const int maze[15][15], int rows, int cols) {
 
     // Nếu kẻ địch đã đến mục tiêu, chọn lại mục tiêu mới
     if (x == targetX && y == targetY) {
-        RandomTarget(maze, rows, cols);  
+        RandomTarget(maze, rows, cols);
     }
 
     // Di chuyển kẻ địch về phía mục tiêu nếu ô kế tiếp là ô trống
@@ -49,7 +49,7 @@ void Enemy::Move(const int maze[13][15], int rows, int cols) {
         y--;
     }
     else {
-        RandomTarget(maze, rows, cols);                                             // Nếu không thể di chuyển (bị chặn bởi tường), chọn lại mục tiêu
+        RandomTarget(maze, rows, cols);  // Di chuyển ngẫu nhiên nếu không theo người chơi
     }
 }
 

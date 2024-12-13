@@ -2,23 +2,24 @@
 #include "Maze.h"
 
 
-int full[13][15] = {
+int full[15][15] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 1, 0, 1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1},
+    {1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {1, 2, 0, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1},
+    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {1, 2, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
+    {1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+    {1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+    {1, 0, 1, 2, 1, 2, 1, 0, 1, 2, 1, 0, 1, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 2, 2, 2, 0, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1},
-    {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1},
-    {1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-    {1, 0, 1, 2, 1, 2, 1, 0, 1, 2, 1, 0, 1, 0, 1},
     {1, 0, 0, 2, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+
 };
-
-
 
 const int(*Maze::GetMaze() const)[15]
 {
@@ -33,12 +34,19 @@ Maze::Maze() : size(50)  {
     }
 }
 
+int Maze::GetRows() const {
+    return rows;
+}
+int Maze::GetCols() const {
+    return cols;
+}
+
 void Maze::draw(CDC* dc) const {
-    CImage roadImage, blockImage, wallImage;
+    CImage roadImage, blockImage, wallImage, exImage;
     HRESULT hr = roadImage.Load(_T("res/road.png"));
     HRESULT hr1 = blockImage.Load(_T("res/block.png"));
-    HRESULT hr2 = wallImage.Load(_T("res/wall1.png"));
-
+    HRESULT hr2 = wallImage.Load(_T("res/wall.png"));
+    HRESULT ex = exImage.Load(_T("res/explosion.png"));
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             CRect cellRect(j * size, i * size, (j + 1) * size, (i + 1) * size);
@@ -50,7 +58,10 @@ void Maze::draw(CDC* dc) const {
             }
             else if (maze[i][j] == 2) {
                 blockImage.Draw(dc->GetSafeHdc(), cellRect);
-            }                                             
+            }
+            else if (maze[i][j] == -1) {
+                exImage.Draw(dc->GetSafeHdc(), cellRect);
+            }
         }
     }
 }
@@ -65,25 +76,51 @@ void Maze::SetCell(int row, int col, int value) {
 }
 
 void Maze::Explosion(int bombX, int bombY, int range) {
-    for (int r = 1; r <= range; ++r) {
-        // Nổ lên (Chỉ nổ lên nếu không gặp tường)
-        if (bombY - r >= 0 && maze[bombY - r][bombX] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
-            maze[bombY - r][bombX] = 0;  // Xóa vật cản
-        }
+    // Đặt vị trí bom thành -1 (bom phát nổ tại vị trí này)
+    SetCell(bombY, bombX, -1);
 
-        // Nổ xuống (Chỉ nổ xuống nếu không gặp tường)
-        if (bombY + r < rows && maze[bombY + r][bombX] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
-            maze[bombY + r][bombX] = 0;  // Xóa vật cản
-        }
+    // Các hướng (trên, dưới, trái, phải)
+    int directions[4][2] = { {0, -1}, {0, 1}, {-1, 0}, {1, 0} };
 
-        // Nổ trái (Chỉ nổ trái nếu không gặp tường)
-        if (bombX - r >= 0 && maze[bombY][bombX - r] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
-            maze[bombY][bombX - r] = 0;  // Xóa vật cản
-        }
+    for (auto& dir : directions) {
+        bool canExplode = true;  // Biến kiểm tra xem có thể nổ tiếp hay không
+        for (int r = 1; r <= range; r++) {
+            int newY = bombY + dir[0] * r;
+            int newX = bombX + dir[1] * r;
 
-        // Nổ phải (Chỉ nổ phải nếu không gặp tường)
-        if (bombX + r < cols && maze[bombY][bombX + r] != 1) {  // Nếu không gặp tường và không vượt quá biên giới
-            maze[bombY][bombX + r] = 0;  // Xóa vật cản
+            // Kiểm tra phạm vi hợp lệ (tránh ra ngoài biên)
+            if (newY < 0 || newY >= rows || newX < 0 || newX >= cols) {
+                break;
+            }
+
+            int cell = GetCell(newY, newX);
+
+            // Nếu gặp tường (ô có giá trị 1), set giá trị thành -1 và dừng nổ
+            if (cell == 1) {
+                break; // Dừng nổ ở tường
+            }
+            // Nếu gặp block (ô có giá trị 2), set giá trị thành -1 nhưng không tạo hiệu ứng nổ
+            else if (cell == 2) {
+                SetCell(newY, newX, -1);
+
+                break;  // Ngừng nổ tại đây, không lan sang các ô khác
+            }
+            
+            else {
+                SetCell(newY, newX, -1); 
+            }
         }
     }
 }
+
+
+void Maze::ClearExplosion() {
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (maze[i][j] == -1) {
+                maze[i][j] = 0; 
+            }
+        }
+    }
+}
+

@@ -1,9 +1,10 @@
 ﻿#include "pch.h"
 #include "Boom.h"
-#include "Maze.h"
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
 
-Boom::Boom() : x(-1), y(-1), range(0), isActive(false), isExploded(false) {}
+Boom::Boom() : x(-1), y(-1), range(0), isActive(false), isExploded(false),size(50) {}
 
 void Boom::SetPosition(int newX, int newY) {
     x = newX;
@@ -43,61 +44,36 @@ bool Boom::IsExploded() const {
 
 void Boom::Update(Maze& maze) {
     if (isActive && !isExploded) {
-        Explode(maze);  // Gọi hàm Explode để xử lý vụ nổ
+        Explode(maze); 
     }
 }
 
 void Boom::Explode(Maze& maze) {
-    isExploded = true;  // Đánh dấu bom đã nổ
-    maze.Explosion(x, y, range);  // Cập nhật maze với vụ nổ
+    isExploded = true;  
+    maze.Explosion(x, y, range); 
 }
 
 void Boom::Draw(CDC* dc) const {
-    CImage bombImage, explosionImage;
-    bombImage.Load(_T("res/bomb.png"));
-    explosionImage.Load(_T("res/explosion.png"));
-    int size = 50;
-
-    // Vẽ bom nếu nó còn hoạt động
+   bool imagesLoaded = false;
+   CImage bombImage, explosionImage;
+   bombImage.Load(_T("res/bomb.png"));
+   explosionImage.Load(_T("res/explosion.png"));
     if (isActive && !isExploded) {
-        CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
-        bombImage.Draw(dc->GetSafeHdc(), bombRect);
-    }
-    // Vẽ vụ nổ nếu bom đã phát nổ
-    else if (isExploded) {
-        // Vẽ hình ảnh vụ nổ tại vị trí trung tâm
-        explosionImage.Draw(dc->GetSafeHdc(),
-            x * size, y * size,
-            size, size);
-
-        // Vẽ các vùng nổ xung quanh (hình chữ thập)
-        for (int r = 1; r <= range; ++r) {
-            // Vẽ hướng trên
-            if (y - r >= 0) {
-                explosionImage.Draw(dc->GetSafeHdc(),
-                    x * size, (y - r) * size,
-                    size, size);
-            }
-            // Vẽ hướng dưới
-            if (y + r < 13) {
-                explosionImage.Draw(dc->GetSafeHdc(),
-                    x * size, (y + r) * size,
-                    size, size);
-            }
-            // Vẽ hướng trái
-            if (x - r >= 0) {
-                explosionImage.Draw(dc->GetSafeHdc(),
-                    (x - r) * size, y * size,
-                    size, size);
-            }
-            // Vẽ hướng phải
-            if (x + r < 15) {
-                explosionImage.Draw(dc->GetSafeHdc(),
-                    (x + r) * size, y * size,
-                    size, size);
-            }
-        }
+        DrawBomb(dc, bombImage);  
+    } else {
+        DrawExplosion(dc, explosionImage); 
     }
 }
 
+void Boom::DrawBomb(CDC* dc, const CImage& bombImage) const {
+    // Vẽ bom ở vị trí (x, y)
+    CRect bombRect(x * size, y * size, (x + 1) * size, (y + 1) * size);
+    bombImage.Draw(dc->GetSafeHdc(), bombRect);
+}
 
+void Boom::DrawExplosion(CDC* dc, const CImage& explosionImage) const {
+   
+        
+
+       
+}

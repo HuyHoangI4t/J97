@@ -7,10 +7,12 @@ private:
     int range;       // Phạm vi nổ của quả bom
     bool isActive;   // Trạng thái của quả bom có hoạt động hay không
     bool isExploded; // Trạng thái của quả bom đã nổ hay chưa
-
+    int size;
 public:
-    Maze map;
+    Maze maze;
+
     Boom();
+  
     void SetPosition(int newX, int newY);
     void SetRange(int newRange);
     int GetX() const;
@@ -22,5 +24,6 @@ public:
     void Update(Maze& maze);                // Cập nhật bom mỗi khi thời gian trôi qua
     void Explode(Maze& maze);               // Xử lý vụ nổ
     void Draw(CDC* dc) const;
-
+    void DrawBomb(CDC* dc, const CImage& bombImage) const;
+    void DrawExplosion(CDC* dc, const CImage& explosionImage) const;
 };
