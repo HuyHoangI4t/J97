@@ -12,7 +12,7 @@ Dự án được thực hiện bởi nhóm sinh viên **Trường Đại học 
 - **Điều khiển nhân vật**: Dễ dàng di chuyển bằng các phím `W` , `A` , `S` , `D`.
 - **Hệ thống bom**: Đặt bom, phá vật cản và tiêu diệt kẻ thù.
 - **Kẻ thù AI thông minh**: Di chuyển ngẫu nhiên hoặc bám sát người chơi.
-  ### Đang có ý tưởng nâng cấp.
+### 🆙 Đang có ý tưởng nâng cấp.
 - **Thu thập vật phẩm**: Tăng tốc độ, tăng số lượng bom, mở rộng phạm vi nổ.
 - **Hiệu ứng đồ họa và âm thanh sống động**.
 - **Hệ thống cấp độ**: Độ khó tăng dần qua từng màn chơi.
@@ -101,7 +101,7 @@ Chúng tôi luôn chào đón các ý tưởng và cải tiến từ cộng đ�
 - **Nguyễn Thị Mỹ Duyên**: Phát triển giao diện.
 - **Phạm Quang Đức**: Thiết kế đồ họa và hiệu ứng âm thanh.
 - **Ngô Tuấn Kiệt**: Edit video và làm báo cáo.
-- **Liên hệ nhóm**: [huyhoangpro187@gmail.com](huyhoangpro187@gmail.com)
+- **Liên hệ nhóm**: 📩[huyhoangpro187@gmail.com](huyhoangpro187@gmail.com)
 
 ---
 
