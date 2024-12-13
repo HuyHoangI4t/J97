@@ -113,6 +113,7 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
             Invalidate();
         }
     } else if (nIDEvent == 2) {
+        // hieu ung bom
         KillTimer(2); 
         maze.ClearExplosion();
         Invalidate(); 

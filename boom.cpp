@@ -1,8 +1,5 @@
 ﻿#include "pch.h"
 #include "Boom.h"
-#include <mmsystem.h>
-#pragma comment(lib, "winmm.lib")
-
 
 Boom::Boom() : x(-1), y(-1), range(0), isActive(false), isExploded(false),size(50) {}
 

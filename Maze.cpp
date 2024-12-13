@@ -76,43 +76,23 @@ void Maze::SetCell(int row, int col, int value) {
 }
 
 void Maze::Explosion(int bombX, int bombY, int range) {
-    // Đặt vị trí bom thành -1 (bom phát nổ tại vị trí này)
     SetCell(bombY, bombX, -1);
-
-    // Các hướng (trên, dưới, trái, phải)
     int directions[4][2] = { {0, -1}, {0, 1}, {-1, 0}, {1, 0} };
-
     for (auto& dir : directions) {
-        bool canExplode = true;  // Biến kiểm tra xem có thể nổ tiếp hay không
         for (int r = 1; r <= range; r++) {
             int newY = bombY + dir[0] * r;
             int newX = bombX + dir[1] * r;
-
-            // Kiểm tra phạm vi hợp lệ (tránh ra ngoài biên)
-            if (newY < 0 || newY >= rows || newX < 0 || newX >= cols) {
-                break;
-            }
-
+            if (newY < 0 || newY >= rows || newX < 0 || newX >= cols)   break;
             int cell = GetCell(newY, newX);
-
-            // Nếu gặp tường (ô có giá trị 1), set giá trị thành -1 và dừng nổ
-            if (cell == 1) {
-                break; // Dừng nổ ở tường
-            }
-            // Nếu gặp block (ô có giá trị 2), set giá trị thành -1 nhưng không tạo hiệu ứng nổ
+            if (cell == 1)  break;
             else if (cell == 2) {
-                SetCell(newY, newX, -1);
-
-                break;  // Ngừng nổ tại đây, không lan sang các ô khác
-            }
-            
-            else {
+                SetCell(newY, newX, -1); break;  
+            } else {
                 SetCell(newY, newX, -1); 
             }
         }
     }
 }
-
 
 void Maze::ClearExplosion() {
     for (int i = 0; i < rows; ++i) {

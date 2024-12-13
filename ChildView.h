@@ -7,12 +7,12 @@
 
 class CChildView : public CWnd {
 private:
-    bool gameOver;               // Trạng thái kết thúc game
-    int size;                    // Kích thước ô vuông
-    Maze maze;                   // Bản đồ
-    Player player;               // Nhân vật
-    Boom activeBomb;             // Bom hiện tại
-    std::vector<Enemy> enemies;  // Danh sách kẻ địch
+    bool gameOver;              
+    int size;                  
+    Maze maze;                  
+    Player player;               
+    Boom activeBomb;             
+    std::vector<Enemy> enemies;  
     bool gameWon;
 public:
     CChildView();

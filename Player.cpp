@@ -2,10 +2,7 @@
 #include "Player.h"
 
 
-Player::Player() : x(1), y(11) {
-
-}
-
+Player::Player() : x(1), y(11) {}
 
 void Player::setX(int x) {
     this->x = x;
@@ -32,25 +29,25 @@ void Player::Draw(CDC* dc) const {
 }
 
 void Player::MoveUp(const Maze& maze) {
-    if (maze.GetCell(y - 1, x) == 0) {  // Kiểm tra nếu không phải là tường
+    if (maze.GetCell(y - 1, x) == 0) { 
         y--;
     }
 }
 
 void Player::MoveDown(const Maze& maze) {
-    if (maze.GetCell(y + 1, x) == 0) {  // Kiểm tra nếu không phải là tường
+    if (maze.GetCell(y + 1, x) == 0) {  
         y++;
     }
 }
 
 void Player::MoveLeft(const Maze& maze) {
-    if (maze.GetCell(y, x - 1) == 0) {  // Kiểm tra nếu không phải là tường
+    if (maze.GetCell(y, x - 1) == 0) {  
         x--;
     }
 }
 
 void Player::MoveRight(const Maze& maze) {
-    if (maze.GetCell(y, x + 1) == 0) {  // Kiểm tra nếu không phải là tường
+    if (maze.GetCell(y, x + 1) == 0) { 
         x++;
     }
 }
