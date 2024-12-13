@@ -73,7 +73,7 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) {
             if (!activeBomb.IsExploded()) {
                 PlaySound(_T("res/activebomb.wav"), NULL, SND_FILENAME | SND_ASYNC);
                 activeBomb.SetPosition(player.getX(), player.getY());
-                activeBomb.SetRange(3);
+                activeBomb.SetRange(1);
                 activeBomb.Activate();
                 SetTimer(1, 1000, NULL);
             } break;
@@ -102,7 +102,7 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
                 } else { it++; }
             }
             // Kiểm tra người chơi
-            if ((player.getX() == activeBomb.GetX() && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) ||(player.getY() == activeBomb.GetY() && abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange())) {
+            if ((player.getX() == activeBomb.GetX() && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) || (player.getY() == activeBomb.GetY() && abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange())) {
                 maze.SetCell(player.getX(), player.getY(), 0); 
                 OnGameOver(false); return;
             }

@@ -25,5 +25,5 @@ public:
     void Explode(Maze& maze);               // Xử lý vụ nổ
     void Draw(CDC* dc) const;
     void DrawBomb(CDC* dc, const CImage& bombImage) const;
-    void DrawExplosion(CDC* dc, const CImage& explosionImage) const;
+  
 };

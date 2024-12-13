@@ -60,9 +60,7 @@ void Boom::Draw(CDC* dc) const {
    explosionImage.Load(_T("res/explosion.png"));
     if (isActive && !isExploded) {
         DrawBomb(dc, bombImage);  
-    } else {
-        DrawExplosion(dc, explosionImage); 
-    }
+    } 
 }
 
 void Boom::DrawBomb(CDC* dc, const CImage& bombImage) const {
@@ -71,9 +69,3 @@ void Boom::DrawBomb(CDC* dc, const CImage& bombImage) const {
     bombImage.Draw(dc->GetSafeHdc(), bombRect);
 }
 
-void Boom::DrawExplosion(CDC* dc, const CImage& explosionImage) const {
-   
-        
-
-       
-}
