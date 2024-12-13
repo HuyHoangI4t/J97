@@ -52,6 +52,6 @@ Chúng tôi luôn chào đón các ý tưởng và cải tiến từ cộng đ�
 ---
 
 ## 💌 Lời cảm ơn
-  1. Chúng em xin gửi lời cảm ơn sâu sắc đến cô **Trương Thị Hương Giang** và các thầy cô trong Khoa Khoa học Tự nhiên và Công nghệ, Trường Đại học Tây Nguyên, đã hỗ trợ và đồng hành trong quá trình thực hiện dự án này.
+Chúng tôi xin gửi lời cảm ơn sâu sắc đến cô **Trương Thị Hương Giang** và các thầy cô trong Khoa Khoa học Tự nhiên và Công nghệ, Trường Đại học Tây Nguyên, đã hỗ trợ và đồng hành trong quá trình thực hiện dự án này.
 
 ---
