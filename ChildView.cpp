@@ -33,7 +33,7 @@ CChildView::~CChildView() {}
 
 void CChildView::OnGameOver(bool win) {
     if (gameOver) return;  
-    CString message = win ? _T("You win!") : _T("You lose!");
+    CString message = win ? _T("You win! 🤣🤣🤣🤣") : _T("You lose! 😅😅😅😅😅");
     MessageBox(message);
     gameOver = true;
     if (win)
@@ -102,7 +102,10 @@ void CChildView::OnTimer(UINT_PTR nIDEvent) {
                 } else { it++; }
             }
             // Kiểm tra người chơi
-            if ((player.getX() == activeBomb.GetX() && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) || (player.getY() == activeBomb.GetY() && abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange())) {
+            if ((player.getX() == activeBomb.GetX() 
+            && abs(player.getY() - activeBomb.GetY()) <= activeBomb.GetRange()) 
+            || (player.getY() == activeBomb.GetY() 
+            && abs(player.getX() - activeBomb.GetX()) <= activeBomb.GetRange())) {
                 maze.SetCell(player.getX(), player.getY(), 0); 
                 OnGameOver(false); return;
             }
