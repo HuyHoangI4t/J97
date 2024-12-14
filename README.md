@@ -26,14 +26,6 @@ Dự án được thực hiện bởi nhóm sinh viên **Trường Đại học 
 - **Công cụ phát triển**: Microsoft Visual Studio
 - **Hệ thống thiết kế**: Lập trình hướng đối tượng (OOP)
 
----
-
-## 💻 Yêu cầu hệ thống
-- **Hệ điều hành**: Windows 7/8/10/11
-- **Visual Studio**: Phiên bản 2019 trở lên
-- **Thư viện hỗ trợ**:  
-  - MFC (Microsoft Foundation Class)  
-  - GDI+ (nếu sử dụng đồ họa mở rộng)
 
 ---
 
